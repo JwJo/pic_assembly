@@ -1,0 +1,56 @@
+Address   Opcode                 Disassembly              
+
+   0000     6AF2    CLRF 0xff2, ACCESS         清零INTCON寄存器，禁止中断 a=0      
+   0002     8C93    BSF 0xf93, 0x6, ACCESS        Pin RB6设置为输入    a=0     
+   0004     9E93    BCF 0xf93, 0x7, ACCESS       Pin RB7设置为输出          
+   0006     6A81    CLRF 0xf81, ACCESS         清零PORTB寄存器,RB6 RB7拉低
+   0008     6A02    CLRF 0x2, ACCESS        清零0x2地址空间                 
+   000A     6A03    CLRF 0x3, ACCESS        清零0x3地址空间                 
+   000C     D817    RCALL 0x3c              调用内存地址0x3c               
+   000E     D808    RCALL 0x20              调用内存地址0x20                   
+   0010     3E02    INCFSZ 0x2, F, ACCESS      d=1,0x2位置的值加1结果->0x2  如果加1之后的结果为0,就跳过下一条指令              
+   0012     D7FC    BRA 0xc                   跳转到0xc               
+   0014     2A03    INCF 0x3, F, ACCESS        d=1,0x3位置的值加1结果->0x3                
+   0016     0E04    MOVLW 0x4                  W = 0x4           
+   0018     5C03    SUBWF 0x3, W, ACCESS       d=0,0x3中的值减W结果->W                
+   001A     A4D8    BTFSS 0xfd8, 0x2, ACCESS     如果寄存器STATUS的bit2=1,跳过下一条指令             
+   001C     D7F7    BRA 0xc                    跳转到0xc             
+   001E     D7EE    BRA 0xfffffffc  			     跳转到0xfffffffc  
+     
+                  
+   0020     6E01    MOVWF 0x1, ACCESS       work register to f0x1     a=0             
+   0022     0E08    MOVLW 0x8                 move 0x8 to work register                 
+   0024     6E00    MOVWF 0, ACCESS          move work register to f0x0  a=0                
+   0026     8E81    BSF 0xf81, 0x7, ACCESS    PORTB寄存器bit7置1，RB7拉高             
+   0028     3201    RRCF 0x1, F, ACCESS       d=1,F0x1 内容右移一位，结果存入0x1,移出的位保存在STATUS寄存器的bit0和0x1的最高位。
+   002A     A0D8    BTFSS 0xfd8, 0, ACCESS    如果寄存器STATUS的bit0=1,跳 过下一条指令       
+   002C     9E81    BCF 0xf81, 0x7, ACCESS    清零PORTB寄存器的bit7 RB7拉低             
+   002E     AC81    BTFSS 0xf81, 0x6, ACCESS  如果寄存器PORTB的bit6=1,跳过 下一条指令             
+   0030     D7FE    BRA 0x2e                  跳转到0x2e                  
+   0032     BC81    BTFSC 0xf81, 0x6, ACCESS  如果寄存器PORTB的bit6=0,跳过 下一条指令             
+   0034     D7FE    BRA 0x32                  跳转到0x32                    
+   0036     2E00    DECFSZ 0, F, ACCESS       d=1,0x00位置的值减1结果->0x00  如果减1之后的结果为0,就跳过下一条指令              
+   0038     D7F6    BRA 0x26               跳转到0x26                    
+   003A     0012    RETURN 0    		    retrun 0
+            
+               
+   003C     C002    MOVFF 0x2, 0xfa9          0X2地址空间内容移动到EEADR寄存器                  
+   003E     FFA9    NOP                                    
+   0040     C003    MOVFF 0x3, 0xfaa          0X3地址空间内容移动EEADRH 寄存器，该寄存器只有最低两位                
+   0042     FFAA    NOP                                    
+   0044     9EA6    BCF 0xfa6, 0x7, ACCESS    EECON1 寄存器bit7清零，选择EEROM               
+   0046     9CA6    BCF 0xfa6, 0x6, ACCESS     EECON1 寄存器bit6清零                
+   0048     80A6    BSF 0xfa6, 0, ACCESS      EECON1 寄存器bit0置1              
+   004A     50A8    MOVF 0xfa8, W, ACCESS     W = EEDATA              
+   004C     0004    CLRWDT             		    Clear Watchdog Timer                    
+   004E     0012    RETURN 0                  从子程序返回             
+   0050     0000    NOP                                    
+   0052     0000    NOP                                    
+   0054     0000    NOP                                    
+   0056     0000    NOP                                    
+   0058     FFFF    NOP                                    
+   005A     FFFF    NOP                                    
+   005C     FFFF    NOP                                    
+   005E     FFFF    NOP                                    
+   0060     FFFF    NOP                                    
+   0062     FFFF    NOP                                    
