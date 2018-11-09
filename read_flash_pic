@@ -1,0 +1,87 @@
+ Address   Opcode                 Disassembly              
+
+   0000     6AF2    CLRF 0xff2, ACCESS           清零INTCON寄存器，禁止中断          
+   0002     8C93    BSF 0xf93, 0x6, ACCESS       RB6输入            
+   0004     0000    NOP                                    
+   0006     9E93    BCF 0xf93, 0x7, ACCESS       RB7输出            
+   0008     0000    NOP                                    
+   000A     6A81    CLRF 0xf81, ACCESS           RB端口电平拉低           
+   000C     0E00    MOVLW 0                      W=0          
+   000E     6E02    MOVWF 0x2, ACCESS            W -> 0x2地址            
+   0010     0E00    MOVLW 0                      W=0          
+   0012     6E03    MOVWF 0x3, ACCESS            W -> 0x3地址           
+   0014     0E00    MOVLW 0                      W=0          
+   0016     6E04    MOVWF 0x4, ACCESS            W -> 0x4地址           
+   0018     C002    MOVFF 0x2, 0xff8             0x2地址内容 ->  TBLPTRU                  
+   001A     FFF8    NOP                                    
+   001C     C003    MOVFF 0x3, 0xff7             0x3地址内容 ->  TBLPTRH         
+   001E     FFF7    NOP                                    
+   0020     C004    MOVFF 0x4, 0xff6             0x4地址内容 ->  TBLPTRL        
+   0022     FFF6    NOP                                    
+   0024     0E01    MOVLW 0xff                   W=0x01          
+   0026     6E05    MOVWF 0x5, ACCESS            W -> 0x5内存地址          
+   0028     D834    RCALL 0x92                   调用0x92          
+   002A     D80E    RCALL 0x48                   调用0x48          
+   002C     50F8    MOVF 0xff8, W, ACCESS        TBLPTRU寄存器内容 -> W          
+   002E     5C05    SUBWF 0x5, W, ACCESS         0x5地址内容减W -> W,如果结果等于0，会导致STATUS寄存器Z标志位置1           
+   0030     A4D8    BTFSS 0xfd8, 0x2, ACCESS     如果STATUS寄存器bit2=1,跳过下一条指令           
+   0032     D7FA    BRA 0x28                     跳转到0x28             
+   0034     6A81    CLRF 0xf81, ACCESS           RB端口电平拉低        
+   0036     0012    RETURN 0			 函数结束，芯片会复位
+   0038     FFFF    NOP                                    
+   003A     FFFF    NOP                                    
+   003C     FFFF    NOP                                    
+   003E     FFFF    NOP                                    
+   0040     FFFF    NOP                                    
+   0042     FFFF    NOP                                    
+   0044     FFFF    NOP                                    
+   0046     FFFF    NOP                                    
+   0048     6E01    MOVWF 0x1, ACCESS           W -> 0x1地址           
+   004A     0E08    MOVLW 0x8                   W=0x8           
+   004C     6E00    MOVWF 0, ACCESS             W -> 0x0地址             
+   004E     8E81    BSF 0xf81, 0x7, ACCESS      RB7 拉高             
+   0050     3201    RRCF 0x1, F, ACCESS         0x1地址内容右移一位 -> 0x1地址，右移出的位会保存在STATUS寄存器的bit0位            
+   0052     A0D8    BTFSS 0xfd8, 0, ACCESS      如果STATUS寄存器的bit0=1，跳过下条指令            
+   0054     9E81    BCF 0xf81, 0x7, ACCESS      RB7 拉低           
+   0056     AC81    BTFSS 0xf81, 0x6, ACCESS    如果RB6被拉高跳过下一条指令                
+   0058     D7FE    BRA 0x56                    跳转到0x56           
+   005A     BC81    BTFSC 0xf81, 0x6, ACCESS    如果RB6被拉低跳过下一条指令             
+   005C     D7FE    BRA 0x5a                    跳转到0x5a             
+   005E     2E00    DECFSZ 0, F, ACCESS         0x0地址内容减1 -> 0x0,如果结果等于0跳过下条指令                
+   0060     D7F6    BRA 0x4e                    跳转到0x4e             
+   0062     0012    RETURN 0                    return 0              
+   0064     FFFF    NOP                                    
+   0066     FFFF    NOP                                    
+   0068     FFFF    NOP                                    
+   006A     FFFF    NOP                                    
+   006C     FFFF    NOP                                    
+   006E     FFFF    NOP                                    
+   0070     FFFF    NOP                                    
+   0072     FFFF    NOP                                    
+   0074     FFFF    NOP                                    
+   0076     FFFF    NOP                                    
+   0078     FFFF    NOP                                    
+   007A     FFFF    NOP                                    
+   007C     FFFF    NOP                                    
+   007E     FFFF    NOP                                    
+   0080     FFFF    NOP                                    
+   0082     FFFF    NOP                                    
+   0084     FFFF    NOP                                    
+   0086     FFFF    NOP                                    
+   0088     FFFF    NOP                                    
+   008A     FFFF    NOP                                    
+   008C     FFFF    NOP                                    
+   008E     FFFF    NOP                                    
+   0090     FFFF    NOP                                    
+   0092     8EA6    BSF 0xfa6, 0x7, ACCESS     EECON1寄存器bit7置1              
+   0094     9CA6    BCF 0xfa6, 0x6, ACCESS     EECON1寄存器bit6清零               
+   0096     0009    TBLRD*+                    表读，地址自增           
+   0098     50F5    MOVF 0xff5, W, ACCESS      TABLAT寄存器内容 -> W               
+   009A     0004    CLRWDT                     清看门狗            
+   009C     0012    RETURN 0                   return 0             
+   009E     FFFF    NOP                                    
+   00A0     FFFF    NOP                                    
+   00A2     FFFF    NOP                                    
+   00A4     FFFF    NOP                                    
+   00A6     FFFF    NOP                                    
+                                      
